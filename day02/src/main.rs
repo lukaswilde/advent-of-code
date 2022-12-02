@@ -93,10 +93,10 @@ impl Round {
         Self {
             own_choice: choices
                 .pop()
-                .expect("First item should be a choice for the opponent"),
+                .expect("Second item should be a choice for oneself"),
             opp_choice: choices
                 .pop()
-                .expect("Second vector item should be a choice oneself"),
+                .expect("First item should be a choice for the opponent"),
         }
     }
 
