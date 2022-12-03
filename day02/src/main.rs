@@ -86,7 +86,7 @@ impl Round {
     }
 
     fn new_alt(encoding: &str) -> Self {
-        let two_symbols: Vec<_> = encoding.split_ascii_whitespace().collect();
+        let two_symbols: Vec<_> = encoding.split_whitespace().collect();
         assert!(two_symbols.len() == 2);
 
         let opp_choice = Choice::new(two_symbols[0]);
