@@ -1,3 +1,5 @@
+use utils::parse_text;
+
 fn main() {
     let text = parse_text();
     let rounds = split_in_rounds(&text);
@@ -6,23 +8,6 @@ fn main() {
     let final_score_alt = calculate_score(rounds_alt);
     println!("The final score is {}", final_score);
     println!("The final alternative score is {}", final_score_alt);
-}
-
-fn parse_text() -> String {
-    match std::env::args().len() {
-        2 => std::env::args()
-            .nth(1)
-            .expect("If there is only one argument, it should be the problem text"),
-        3 => {
-            assert!(std::env::args().nth(1).unwrap() == "-i");
-            let filename = std::env::args()
-                .nth(2)
-                .expect("There should be a file as argument");
-
-            std::fs::read_to_string(filename).expect("The file should exist")
-        }
-        _ => panic!("Either we have one argument (the problem text) or 2 (where it is -i file)"),
-    }
 }
 
 fn split_in_rounds(text: &str) -> Vec<Round> {
@@ -120,15 +105,10 @@ impl Round {
     fn outcome(&self) -> u32 {
         let own_score = self.own_choice.score();
         let round_score = match (&self.own_choice, &self.opp_choice) {
-            (Choice::Paper, Choice::Paper)
-            | (Choice::Scissors, Choice::Scissors)
-            | (Choice::Rock, Choice::Rock) => 3,
-            (Choice::Paper, Choice::Scissors) => 0,
-            (Choice::Paper, Choice::Rock) => 6,
-            (Choice::Scissors, Choice::Paper) => 6,
-            (Choice::Scissors, Choice::Rock) => 0,
-            (Choice::Rock, Choice::Paper) => 0,
-            (Choice::Rock, Choice::Scissors) => 6,
+            (x, y) if y == &x.winning_against() => 6,
+            (x, y) if y == &x.losing_against() => 0,
+            (x, y) if y == x => 3,
+            _ => panic!("Should never have a situation where we don't have DRAW, WIN or LOSS"),
         };
         own_score + round_score
     }

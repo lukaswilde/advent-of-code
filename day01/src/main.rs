@@ -1,4 +1,4 @@
-use std::fs;
+use utils::parse_text;
 
 fn main() {
     let text = parse_text();
@@ -8,23 +8,6 @@ fn main() {
     let top_three = get_top_three_calories(&numbers_per_block);
     println!("Most calories that an elve is carrying: {}", most_cals);
     println!("Calories by top three elves are: {}", top_three);
-}
-
-fn parse_text() -> String {
-    match std::env::args().len() {
-        2 => std::env::args()
-            .nth(1)
-            .expect("If there is only one argument, it should be the problem text"),
-        3 => {
-            assert!(std::env::args().nth(1).unwrap() == "-i");
-            let filename = std::env::args()
-                .nth(2)
-                .expect("There should be a file as argument");
-
-            fs::read_to_string(filename).expect("The file should exist")
-        }
-        _ => panic!("Either we have one argument (the problem text) or 2 (where it is -i file)"),
-    }
 }
 
 fn split_in_blocks(text: &str) -> Vec<String> {

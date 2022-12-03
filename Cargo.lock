@@ -49,6 +49,7 @@ version = "0.1.0"
 dependencies = [
  "assert_cmd",
  "predicates",
+ "utils",
 ]
 
 [[package]]
@@ -57,6 +58,7 @@ version = "0.1.0"
 dependencies = [
  "assert_cmd",
  "predicates",
+ "utils",
 ]
 
 [[package]]
@@ -192,6 +194,14 @@ name = "termtree"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "95059e91184749cb66be6dc994f67f182b6d897cb3df74a5bf66b5e709295fd8"
+
+[[package]]
+name = "utils"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "predicates",
+]
 
 [[package]]
 name = "wait-timeout"
