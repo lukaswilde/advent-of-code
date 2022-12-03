@@ -18,7 +18,6 @@ fn determine_item(line: &str) -> char {
     let (left, right) = line.split_at(mid);
     let left_set: HashSet<char> = HashSet::from_iter(left.chars());
     let right_set: HashSet<char> = HashSet::from_iter(right.chars());
-
     let intersection: Vec<&char> = left_set.intersection(&right_set).collect();
     assert_eq!(intersection.len(), 1);
     *intersection[0]
@@ -28,7 +27,7 @@ fn get_items(text: &str) -> Vec<char> {
     text.split('\n').map(determine_item).collect()
 }
 
-fn intersect_sets(x: &[&str]) -> char {
+fn intersect_strings(x: &[&str]) -> char {
     let first: HashSet<char> = HashSet::from_iter(x[0].chars());
     let second: HashSet<char> = HashSet::from_iter(x[1].chars());
     let third: HashSet<char> = HashSet::from_iter(x[2].chars());
@@ -42,7 +41,7 @@ fn get_common_symbol(text: &str) -> Vec<char> {
     text.split('\n')
         .collect::<Vec<&str>>()
         .chunks(3)
-        .map(intersect_sets)
+        .map(intersect_strings)
         .collect()
 }
 
