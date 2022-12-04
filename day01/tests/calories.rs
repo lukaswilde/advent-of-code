@@ -23,8 +23,12 @@ fn example() -> Result<(), Box<dyn std::error::Error>> {
     );
     cmd.assert()
         .success()
-        .stdout(predicate::str::contains("24000"))
-        .stdout(predicate::str::contains("45000"));
+        .stdout(predicate::str::contains(
+            "Most calories that an elve is carrying: 24000",
+        ))
+        .stdout(predicate::str::contains(
+            "Calories by top three elves are: 45000",
+        ));
 
     Ok(())
 }
