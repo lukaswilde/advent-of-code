@@ -4,8 +4,8 @@ use utils::parse_text;
 
 fn main() {
     let text = parse_text();
-    let packet_pos = find_packet_marker_pos(&text, 4);
-    let message_pos = find_packet_marker_pos(&text, 14);
+    let packet_pos = find_marker_pos(&text, 4);
+    let message_pos = find_marker_pos(&text, 14);
     println!("The first position after a packet marker is {}", packet_pos);
     println!(
         "The first position after a message marker is {}",
