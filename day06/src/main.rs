@@ -24,7 +24,7 @@ fn is_unique(sequence: impl Iterator<Item = char>) -> bool {
     true
 }
 
-fn find_packet_marker_pos(text: &str, num_distinct: usize) -> usize {
+fn find_marker_pos(text: &str, num_distinct: usize) -> usize {
     text.chars()
         .collect::<Vec<char>>()
         .windows(num_distinct)
