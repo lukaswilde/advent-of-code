@@ -158,7 +158,7 @@ impl FromStr for File {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let err: Result<Self, Self::Err> = Err(Box::new(std::io::Error::new(
             std::io::ErrorKind::NotFound,
-            "This line is just not a Command",
+            "This line is just not a File",
         )));
         if !s.starts_with("$ ") {
             let args: Vec<&str> = s.split_whitespace().collect();
@@ -189,7 +189,7 @@ impl FromStr for Directory {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let err: Result<Self, Self::Err> = Err(Box::new(std::io::Error::new(
             std::io::ErrorKind::NotFound,
-            "This line is just not a Command",
+            "This line is just not a Directory",
         )));
         if !s.starts_with("$ ") {
             let args: Vec<&str> = s.split_whitespace().collect();
