@@ -43,7 +43,7 @@ fn create_structure(root: Rc<RefCell<Directory>>, text: &str) {
                     }
                 }
                 Command::ChangeRoot => current_dir = root.clone(),
-                Command::List(_) => (),
+                Command::List => (),
             }
         }
         if let Ok(file) = line.parse::<File>() {
@@ -113,7 +113,7 @@ enum Command {
     ChangeUp,
     ChangeDown(String),
     ChangeRoot,
-    List(Vec<String>),
+    List,
 }
 
 impl FromStr for Command {
@@ -131,7 +131,7 @@ impl FromStr for Command {
                 .split_whitespace()
                 .collect();
             let cmd = match args[0] {
-                "ls" => Command::List(Vec::new()),
+                "ls" => Command::List,
                 "cd" => match args[1] {
                     "/" => Command::ChangeRoot,
                     ".." => Command::ChangeUp,
