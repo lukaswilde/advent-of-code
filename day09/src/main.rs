@@ -1,37 +1,32 @@
 // Part 2 produces the wrong results
 
-use std::{collections::HashSet, error::Error, str::FromStr};
+use std::{
+    collections::HashSet,
+    error::Error,
+    ops::{Add, Sub},
+    str::FromStr,
+};
 
 use utils::parse_text;
 
 fn main() {
     let text = parse_text();
-    let mut instructions = collect_instructions(&text);
-    let mut problem = Problem::new(instructions);
-    let mut problem_orig = problem.clone();
+    let instructions = collect_instructions(&text);
+    let mut problem = Problem::new(instructions.clone(), 2);
+    let mut problem_alt = Problem::new(instructions, 10);
 
-    for i in 0..8 {
-        problem.execute_instructions();
-        instructions = problem.get_new_instructions();
-        println!(
-            "Iteration {}: {} endpoint: {:?}, {} endpoint: {:?}",
-            i,
-            i,
-            problem.h_pos,
-            i + 1,
-            problem.t_pos
-        );
-        problem = Problem::new(instructions.clone());
-    }
     problem.execute_instructions();
-    problem_orig.execute_instructions();
+    problem_alt.execute_instructions();
 
-    let num_visited_orig = problem_orig.get_unique_pos();
     let num_visited = problem.get_unique_pos();
-    println!("The number of visited positions is {}", num_visited_orig);
+    let num_visited_alt = problem_alt.get_unique_pos();
+    println!(
+        "The number of visited positions with 2 knots is {}",
+        num_visited
+    );
     println!(
         "The number of visited positions with 10 knots is {}",
-        num_visited
+        num_visited_alt
     );
 }
 
@@ -68,93 +63,71 @@ impl FromStr for Instruction {
     }
 }
 
+#[derive(Eq, PartialEq, Hash, Clone, Debug)]
+struct Point(isize, isize);
+
+impl Add for Point {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Point(self.0 + rhs.0, self.1 + rhs.1)
+    }
+}
+
+impl Sub for Point {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Point(self.0 - rhs.0, self.1 - rhs.1)
+    }
+}
+
 #[derive(Clone)]
 struct Problem {
     instructions: Vec<Instruction>,
-    pos_visited: HashSet<(isize, isize)>,
-    h_pos: (isize, isize),
-    t_pos: (isize, isize),
-    output: Vec<Instruction>,
+    pos_visited: HashSet<Point>,
+    positions: Vec<Point>,
 }
 
 impl Problem {
-    fn new(instructions: Vec<Instruction>) -> Self {
+    fn new(instructions: Vec<Instruction>, num_knots: usize) -> Self {
         Self {
             instructions,
-            pos_visited: HashSet::from([(0, 0)]),
-            h_pos: (0, 0),
-            t_pos: (0, 0),
-            output: Vec::new(),
+            pos_visited: HashSet::from([Point(0, 0)]),
+            positions: vec![Point(0, 0); num_knots],
         }
-    }
-
-    fn are_touching(&self) -> bool {
-        let manhattan = self.h_pos.0.abs_diff(self.t_pos.0) + self.h_pos.1.abs_diff(self.t_pos.1);
-        let both_different = self.h_pos.0 != self.t_pos.0 && self.h_pos.1 != self.t_pos.1;
-        manhattan <= 1 || (manhattan == 2 && both_different)
     }
 
     fn step(&mut self, direction: &str) {
-        let old_h_pos = self.h_pos;
-        match direction {
-            "L" => self.h_pos = (self.h_pos.0 - 1, self.h_pos.1),
-            "R" => self.h_pos = (self.h_pos.0 + 1, self.h_pos.1),
-            "U" => self.h_pos = (self.h_pos.0, self.h_pos.1 + 1),
-            "D" => self.h_pos = (self.h_pos.0, self.h_pos.1 - 1),
-            "DUR" => self.h_pos = (self.h_pos.0 + 1, self.h_pos.1 + 1),
-            "DUL" => self.h_pos = (self.h_pos.0 - 1, self.h_pos.1 + 1),
-            "DDR" => self.h_pos = (self.h_pos.0 + 1, self.h_pos.1 - 1),
-            "DDL" => self.h_pos = (self.h_pos.0 - 1, self.h_pos.1 - 1),
+        let head = &mut self.positions[0];
+        *head = match direction {
+            "L" => Point(head.0, head.1 - 1),
+            "R" => Point(head.0, head.1 + 1),
+            "U" => Point(head.0 - 1, head.1),
+            "D" => Point(head.0 + 1, head.1),
             _ => panic!("Not a valid move instruction"),
+        };
+
+        let mut prev = head.clone();
+        for i in 1..self.positions.len() {
+            let knot = &mut self.positions[i];
+            let to_move = match knot.clone() - prev.clone() {
+                Point(2, 2) => Point(1, 1),
+                Point(-2, -2) => Point(-1, -1),
+                Point(2, -2) => Point(1, -1),
+                Point(-2, 2) => Point(-1, 1),
+                Point(2, _) => Point(1, 0),
+                Point(-2, _) => Point(-1, 0),
+                Point(_, 2) => Point(0, 1),
+                Point(_, -2) => Point(0, -1),
+                x => x,
+            };
+            *knot = prev.clone() + to_move;
+            prev = knot.clone();
         }
-        if !self.are_touching() {
-            let old_t_pos = self.t_pos;
-            match direction {
-                "L" | "R" | "U" | "D" => self.t_pos = old_h_pos,
-                "DUR" => self.t_pos = (self.t_pos.0 + 1, self.t_pos.1 + 1),
-                "DUL" => self.t_pos = (self.t_pos.0 - 1, self.t_pos.1 + 1),
-                "DDR" => self.t_pos = (self.t_pos.0 + 1, self.t_pos.1 - 1),
-                "DDL" => self.t_pos = (self.t_pos.0 - 1, self.t_pos.1 - 1),
-                _ => panic!("Not a valid move instruction"),
-            }
-            self.pos_visited.insert(self.t_pos);
-            match (self.t_pos.0 - old_t_pos.0, self.t_pos.1 - old_t_pos.1) {
-                (-1, 0) => self.output.push(Instruction {
-                    direction: "L".to_string(),
-                    steps: 1,
-                }),
-                (0, 0) => (),
-                (1, 0) => self.output.push(Instruction {
-                    direction: "R".to_string(),
-                    steps: 1,
-                }),
-                (0, 1) => self.output.push(Instruction {
-                    direction: "U".to_string(),
-                    steps: 1,
-                }),
-                (0, -1) => self.output.push(Instruction {
-                    direction: "D".to_string(),
-                    steps: 1,
-                }),
-                (1, 1) => self.output.push(Instruction {
-                    direction: "DUR".to_string(),
-                    steps: 1,
-                }),
-                (-1, 1) => self.output.push(Instruction {
-                    direction: "DUL".to_string(),
-                    steps: 1,
-                }),
-                (-1, -1) => self.output.push(Instruction {
-                    direction: "DDL".to_string(),
-                    steps: 1,
-                }),
-                (1, -1) => self.output.push(Instruction {
-                    direction: "DDR".to_string(),
-                    steps: 1,
-                }),
-                _ => panic!("This movement can't happen"),
-            }
-        }
+
+        self.pos_visited
+            .insert(self.positions.last().expect("Must be set").clone());
     }
 
     fn execute_instructions(&mut self) {
@@ -167,9 +140,5 @@ impl Problem {
 
     fn get_unique_pos(&self) -> usize {
         self.pos_visited.len()
-    }
-
-    fn get_new_instructions(&self) -> Vec<Instruction> {
-        self.output.clone()
     }
 }
