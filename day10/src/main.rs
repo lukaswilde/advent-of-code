@@ -4,12 +4,16 @@ use utils::parse_text;
 
 fn main() {
     let text = parse_text();
+
     let mut instructions = collect_instructions(&text);
     instructions.reverse();
-    let mut clock = Clock::new(instructions.clone());
+
+    let mut clock = Clock::new(instructions);
     clock.execute_instructions();
+
     let signal_strength = clock.get_signal_strength();
     let image = clock.get_image();
+
     println!("The signal strength is {}", signal_strength);
     println!("The final image is: \n\n{}", image);
 }
@@ -23,7 +27,6 @@ fn collect_instructions(text: &str) -> Vec<Instruction> {
         .collect()
 }
 
-#[derive(Clone, Debug)]
 enum Instruction {
     NoOp,
     AddX(isize),
@@ -49,7 +52,6 @@ impl FromStr for Instruction {
     }
 }
 
-#[derive(Clone)]
 struct Clock {
     instructions: Vec<Instruction>,
     register: isize,
