@@ -1,5 +1,3 @@
-// Part 2 produces the wrong results
-
 use std::{
     collections::HashSet,
     error::Error,
