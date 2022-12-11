@@ -4,6 +4,8 @@ Here you can find my solutions to the [Advent of Code](https://adventofcode.com)
 general and readable solutions using Rust 🦀.
 
 
+## Usage
+
 To run the solutions, make sure you have Rust installed. The solutions are organized as a workspace, so to run the program for e.g. `day 2`, use
 
 ```zsh
