@@ -1,4 +1,4 @@
-### Advent of Code 2022
+# Advent of Code 2022
 
 Here you can find my solutions to the [Advent of Code](https://adventofcode.com) puzzles from 2022. I do not focus on speed but rather on 
 general and readable solutions using Rust 🦀.
