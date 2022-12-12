@@ -139,7 +139,7 @@ impl Map {
                     .filter_map(|(j, &val)| (val == 0).then_some(Point(i, j)))
                     .collect::<Vec<_>>()
             })
-            .collect(
+            .collect()
     }
 }
 
