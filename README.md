@@ -1,4 +1,4 @@
-[![Tests](https://github.com/lukaswilde/advent-of-code-2022/actions/workflows/rust-test.yml/badge.svg)](https://github.com/lukaswilde/advent-of-code-2022/actions/workflows/rust-test.yml)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/lukaswilde/advent-of-code-2022/Tests?label=Tests&style=for-the-badge)
 
 # Advent of Code 2022
 
