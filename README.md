@@ -20,6 +20,19 @@ Alternativly, the programs are configured to also accept the problem text direct
 cargo run --release --bin day2 -- "Here is the problem text"
 ```
 
+You can also build all solutions using 
+
+```zsh
+cargo build --release
+```
+
+And run the executable like above:
+
+```zsh
+./target/release/day2 -i day02/puzzle.txt
+```
+
+
 <!--- advent_readme_stars table --->
 ## 2022 Results
 
