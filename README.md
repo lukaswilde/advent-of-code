@@ -1,4 +1,5 @@
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/lukaswilde/advent-of-code-2022/Tests?label=Tests&logo=github&style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/lukaswilde/advent-of-code-2022?style=for-the-badge)
 
 # Advent of Code 2022
 
