@@ -1,3 +1,5 @@
+[![Tests](https://github.com/lukaswilde/advent-of-code-2022/actions/workflows/rust-test.yml/badge.svg)](https://github.com/lukaswilde/advent-of-code-2022/actions/workflows/rust-test.yml)
+
 # Advent of Code 2022
 
 Here you can find my solutions to the [Advent of Code](https://adventofcode.com) puzzles from 2022. I do not focus on speed but rather on 
