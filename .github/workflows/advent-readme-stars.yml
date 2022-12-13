@@ -20,7 +20,7 @@ jobs:
       
       - name: Raise PR
         id: readme
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         with:
           branch: "auto-readme-pr"
           base: main
@@ -29,19 +29,19 @@ jobs:
           delete-branch: true
           
       - name: Check PR output
-        if: ${{ steps.readme.pull-request-number }}
+        if: ${{ steps.readme.outputs.pull-request-number }}
         run: |
-          echo "Pull Request Number: ${{ steps.readme.pull-request-number }}"
+          echo "Pull Request Number: ${{ steps.readme.outputs.pull-request-number }}"
           
       - name: Approve PR
-        if: ${{ steps.readme.pull-request-number }}
-        uses: juliangruber/approve-pull-request-action@v1
+        if: ${{ steps.readme.outputs.pull-request-number }}
+        uses: juliangruber/approve-pull-request-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           number: ${{ steps.readme.outputs.pull-request-number }}
           
       - name: Merge PR
-        if: ${{ steps.readme.pull-request-number }}
+        if: ${{ steps.readme.outputs.pull-request-number }}
         uses: juliangruber/merge-pull-request-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
