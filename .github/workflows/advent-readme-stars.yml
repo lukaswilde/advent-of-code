@@ -26,6 +26,7 @@ jobs:
           base: main
           title: "Auto update Readme ⭐"
           committer: Lukas Wilde <lukwilde20@gmail.com>
+          author: Lukas Wilde <lukwilde20@gmail.com>
           token: ${{ secrets.GITHUB_TOKEN }}
           delete-branch: true
           
