@@ -28,13 +28,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           delete-branch: true
           
+      - name: Check PR output
+        if: ${{ steps.readme.pull-request-number }}
+        run: |
+          echo "Pull Request Number: ${{ steps.readme.pull-request-number }}"
+          
       - name: Approve PR
+        if: ${{ steps.readme.pull-request-number }}
         uses: juliangruber/approve-pull-request-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           number: ${{ steps.readme.outputs.pull-request-number }}
           
       - name: Merge PR
+        if: ${{ steps.readme.pull-request-number }}
         uses: juliangruber/merge-pull-request-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
