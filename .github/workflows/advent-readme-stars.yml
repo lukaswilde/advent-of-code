@@ -25,9 +25,7 @@ jobs:
           branch: "auto-readme-pr"
           base: main
           title: "Auto update Readme ⭐"
-          committer: Lukas Wilde <lukwilde20@gmail.com>
-          author: Lukas Wilde <lukwilde20@gmail.com>
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           delete-branch: true
           
       - name: Check PR output
