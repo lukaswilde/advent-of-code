@@ -13,20 +13,14 @@ fn main() {
 }
 
 fn order_and_find(mut lists: Vec<List>) -> usize {
-    let two = parse_list("[2]");
-    let six = parse_list("[6]");
+    let two = parse_list("[[2]]");
+    let six = parse_list("[[6]]");
 
     lists.sort();
     lists
         .iter()
         .enumerate()
-        .filter_map(|(i, x)| {
-            if x == &two || x == &six {
-                Some(i + 1)
-            } else {
-                None
-            }
-        })
+        .filter_map(|(i, x)| (x == &two || x == &six).then_some(i + 1))
         .product()
 }
 
@@ -34,45 +28,47 @@ fn sum_ordered_indices(pairs: Vec<Pair>) -> usize {
     pairs
         .iter()
         .enumerate()
-        .filter_map(|(i, l)| if l.0 <= l.1 { Some(i + 1) } else { None })
+        .filter_map(|(i, l)| (l.0 <= l.1).then_some(i + 1))
         .sum()
 }
 
 fn create_lists(text: &str) -> Vec<List> {
     let mut text = text.to_string();
     text.push_str("\n[[2]]\n[[6]]");
-    text.replace("\n\n", "\n")
-        .lines()
-        .map(|l| parse_list(&l[1..l.len() - 1]))
+    text.lines()
+        .filter(|&l| !l.is_empty())
+        .map(parse_list)
         .collect()
 }
 
 fn create_pairs(text: &str) -> Vec<Pair> {
     text.split("\n\n")
-        .flat_map(|block| block.lines().map(|x| parse_list(&x[1..x.len() - 1])))
-        .collect::<Vec<_>>()
+        .flat_map(|block| block.lines().map(parse_list))
+        .collect::<Vec<List>>()
         .chunks(2)
         .map(|x| Pair(x[0].clone(), x[1].clone()))
         .collect()
 }
 
 fn parse_list(text: &str) -> List {
+    let text = &text[1..text.len() - 1];
     let mut items = vec![];
 
-    let pass = text
-        .chars()
-        .fold((0, String::from("")), |(acc, new_text), cur| {
-            if acc == 0 && cur == ',' {
+    let pass = text.chars().fold(
+        (0, String::from("")),
+        |(unclosed_brackets, new_text), cur_char| {
+            if unclosed_brackets == 0 && cur_char == ',' {
                 items.push(new_text.parse::<ListNode>().expect("should be possible"));
-                (acc, String::from(""))
-            } else if cur == '[' {
-                (acc + 1, new_text + "[")
-            } else if cur == ']' {
-                (acc - 1, new_text + "]")
+                (unclosed_brackets, String::from(""))
+            } else if cur_char == '[' {
+                (unclosed_brackets + 1, new_text + "[")
+            } else if cur_char == ']' {
+                (unclosed_brackets - 1, new_text + "]")
             } else {
-                (acc, new_text + cur.to_string().as_str())
+                (unclosed_brackets, new_text + cur_char.to_string().as_str())
             }
-        });
+        },
+    );
 
     items.push(pass.1.parse::<ListNode>().expect("Should be possible"));
     List { items }
@@ -102,7 +98,6 @@ impl FromStr for ListNode {
         } else if s.is_empty() {
             Ok(ListNode::Empty)
         } else {
-            let s = &s[1..s.len() - 1];
             Ok(ListNode::Body(Box::new(parse_list(s))))
         }
     }
