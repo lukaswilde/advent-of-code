@@ -78,21 +78,21 @@ struct Map {
 
 impl Map {
     fn new(shapes: &[Shape]) -> Self {
-        let (max_x, mut max_y) = shapes
+        let (max_x, max_y) = shapes
             .iter()
             .flat_map(|x| x.moves.iter())
             .fold((usize::MIN, usize::MIN), |(max_x, max_y), cur| {
                 (max(max_x, cur.0), max(max_y, cur.1))
             });
 
-        // As part of part 2, assume double the width from [0, max_x]
+        // As part of Part 2, we have an "infinite" floor. However, for printing
+        // We restrict the range to [MIN_X, MAX_X_ADDER + max x-value in rock formation]
         let max_x = MAX_X_ADDER + max_x;
-        // Allow for rim so sand can fall off
-        max_y += 1;
 
+        // width/height = difference + 1, e.g. [0, 3] is range of size 4
         let width = max_x - MIN_X + 1;
-        // Given by Part 2
-        let height = max_y + 2;
+        // Given by Part 2 (at + 2 is the floor)
+        let height = max_y + 3;
         let mut grid = vec![vec!['.'; height]; width];
 
         for shape in shapes.iter() {
@@ -132,12 +132,17 @@ impl Map {
     }
 
     fn drop_sand(&self, sand_pos: &Point, part2: bool) -> Option<Point> {
-        if part2 && sand_pos.1 == self.height - 2 {
+        // At self.height - 1 is the floor,
+        // so self.height - 2 indicates the last row above the floor
+        if part2 && sand_pos.1 >= self.height - 2 {
             return None;
         }
-        if sand_pos.0 < MIN_X
+        if !part2
+            && (sand_pos.0 < MIN_X
             || sand_pos.0 >= MIN_X + self.width - 1
-            || sand_pos.1 >= self.height - 1
+            // self.height - 3 is the height of the problem in Part 1
+            // Part 2 added 2 additional rows
+            || sand_pos.1 >= self.height - 3)
         {
             return None;
         }
@@ -162,7 +167,7 @@ impl Map {
         while let Some(p) = self.drop_sand(&sand_pos, part2) {
             sand_pos = p;
         }
-        if !part2 && sand_pos.1 == self.height - 1 {
+        if !part2 && sand_pos.1 == self.height - 3 {
             return false;
         }
         if sand_pos.0 == 500 && sand_pos.1 == 0 && !self.is_clear(sand_pos.0, sand_pos.1) {
@@ -176,13 +181,14 @@ impl Map {
 impl Display for Map {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut s = String::new();
-        for h in 0..self.height {
+        for h in 0..self.height - 1 {
             for w in 0..self.width {
                 let c = self.grid[w][h];
                 s.push(c);
             }
             s.push('\n');
         }
+        s.push_str("#".repeat(self.width).as_str());
         write!(f, "{}", s)
     }
 }
