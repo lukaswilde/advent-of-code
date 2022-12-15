@@ -1,4 +1,4 @@
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/lukaswilde/advent-of-code-2022/rust-test.yml?branch=main?label=Tests&logo=github&style=for-the-badge)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/lukaswilde/advent-of-code-2022/rust-test.yml?branch=main&label=Tests&logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/lukaswilde/advent-of-code-2022?style=for-the-badge)
 ![](https://img.shields.io/badge/Made%20with-Rust-orange?style=for-the-badge&logo=rust)
 
