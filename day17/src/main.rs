@@ -1,30 +1,61 @@
-use std::{cmp::max, fmt::Display};
+use std::{cmp::max, collections::HashMap, fmt::Display};
 
 use utils::parse_text;
 
-const NUM_ROUNDS: usize = 2022;
+const NUM_ROUNDS: usize = 1000000000000;
+const INTERMEDIATE_STEP: usize = 2022;
+// As we do recognize signatures and therefore do not really stack to the height of
+// NUM_ROUNDS, I chose a still managable size dependent on the INTERMEDIATE_STEP
+const MAP_HEIGHT: usize = INTERMEDIATE_STEP * 1000;
 
 fn main() {
     let text = parse_text();
     let directions = parse_directions(&text);
 
-    let mut map = Map::new(NUM_ROUNDS);
-    let max_height = execute_drops(&mut map, &directions, NUM_ROUNDS) + 1;
-    println!("The map is\n{}", map);
-    println!("The maximum height is {}", max_height);
+    let mut map = Map::new();
+    let (inter_height, max_height) = execute_drops(&mut map, &directions, NUM_ROUNDS);
+    // println!("The map is\n{}", map);
+    println!("The maximum height is {}", inter_height);
+    println!(
+        "The maximum height for the ridiculous amount of rounds is {}",
+        max_height
+    );
 }
 
-fn execute_drops(map: &mut Map, directions: &Vec<Direction>, rounds: usize) -> usize {
+fn execute_drops(map: &mut Map, directions: &Vec<Direction>, rounds: usize) -> (usize, usize) {
+    // Map top 30 rows as signature to time seen and max height there
+    let mut seen: HashMap<Signature, (usize, usize)> = HashMap::new();
+    let mut added_height = 0;
+    let mut intermediate_result = 0;
+
+    let mut i = 0;
     let mut direction_idx = 0;
     let mut height = -1;
-    for i in 0..rounds {
+    while i < rounds {
+        if i == INTERMEDIATE_STEP {
+            intermediate_result = height as usize;
+        }
         let shape = select_shape(i);
         let (new_height, new_direction_idx) =
             spawn_and_drop(shape, directions, height, direction_idx, map);
         height = max(new_height, height);
         direction_idx = new_direction_idx;
+
+        // Approach for Part 2 inspired by https://github.com/jonathanpaulson/AdventOfCode/blob/master/2022/17.py
+        if i > INTERMEDIATE_STEP {
+            let signature = Signature::new(direction_idx, height as usize, map, shape);
+            if let Some((t, top_height)) = seen.get(&signature) {
+                let delta_t = i - t;
+                let delta_height = height as usize - top_height;
+                let amount = (rounds - i) / delta_t;
+                added_height += amount * delta_height;
+                i += amount * delta_t;
+            }
+            seen.insert(signature, (i, height as usize));
+        }
+        i += 1;
     }
-    height as usize
+    (intermediate_result + 1, height as usize + added_height + 1)
 }
 
 fn select_shape(idx: usize) -> Shape {
@@ -80,7 +111,6 @@ fn spawn_and_drop(
         } else {
             landed = true;
         }
-        // println!("The map is\n{}", map);
     }
     (last_rock.max_height(), idx)
 }
@@ -95,13 +125,13 @@ fn parse_directions(text: &str) -> Vec<Direction> {
         .collect()
 }
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
 enum Shape {
-    Horizontal, // Center is leftmost
-    Cross,      // Center is center
-    Angle,      // Center is corner
-    Vertical,   // Center is lowest
-    Block,      // Center is corner left down
+    Horizontal, // Center is leftmost block
+    Cross,      // Center is center block
+    Angle,      // Center is corner block
+    Vertical,   // Center is lowest block
+    Block,      // Center is corner left down block
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -141,15 +171,40 @@ enum Direction {
     Right,
 }
 
+#[derive(Debug, PartialEq, Eq, Hash)]
+struct Signature {
+    direction_idx: usize,
+    upper_grid: Vec<[char; 7]>,
+    shape: Shape,
+}
+
+impl Signature {
+    fn new(direction_idx: usize, max_height: usize, map: &Map, shape: Shape) -> Self {
+        let upper_grid = map
+            .grid
+            .iter()
+            .skip(max_height - 30)
+            .take(30)
+            .cloned()
+            .collect::<Vec<_>>();
+
+        Self {
+            direction_idx,
+            upper_grid,
+            shape,
+        }
+    }
+}
+
+#[derive(Debug, Hash)]
 struct Map {
     grid: Vec<[char; 7]>,
     height: usize,
 }
 
 impl Map {
-    fn new(num_rounds: usize) -> Self {
-        // 3 is the maximum size of a rock
-        let upper_bound = num_rounds * 4;
+    fn new() -> Self {
+        let upper_bound = MAP_HEIGHT;
         let grid = vec![['.'; 7]; upper_bound];
 
         Self {
