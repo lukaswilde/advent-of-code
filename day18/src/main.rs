@@ -97,12 +97,11 @@ fn reaches_outside(
             }
             return true;
         }
-        to_inspect.push_back((new_point.0 + 1, new_point.1, new_point.2));
-        to_inspect.push_back((new_point.0 - 1, new_point.1, new_point.2));
-        to_inspect.push_back((new_point.0, new_point.1 + 1, new_point.2));
-        to_inspect.push_back((new_point.0, new_point.1 - 1, new_point.2));
-        to_inspect.push_back((new_point.0, new_point.1, new_point.2 + 1));
-        to_inspect.push_back((new_point.0, new_point.1, new_point.2 - 1));
+        generate_neighbors(new_point.0, new_point.1, new_point.2)
+            .iter()
+            .for_each(|&p| {
+                to_inspect.push_back(p);
+            });
     }
     for point in seen.iter() {
         inside.insert(*point);
@@ -116,54 +115,13 @@ fn get_number_exposed(points_set: &HashSet<(isize, isize, isize)>) -> usize {
     let mut inside = HashSet::new();
 
     for point in points_set.iter() {
-        if reaches_outside(
-            (point.0 + 1, point.1, point.2),
-            points_set,
-            &mut outside,
-            &mut inside,
-        ) {
-            result += 1;
-        }
-        if reaches_outside(
-            (point.0 - 1, point.1, point.2),
-            points_set,
-            &mut outside,
-            &mut inside,
-        ) {
-            result += 1;
-        }
-        if reaches_outside(
-            (point.0, point.1 + 1, point.2),
-            points_set,
-            &mut outside,
-            &mut inside,
-        ) {
-            result += 1;
-        }
-        if reaches_outside(
-            (point.0, point.1 - 1, point.2),
-            points_set,
-            &mut outside,
-            &mut inside,
-        ) {
-            result += 1;
-        }
-        if reaches_outside(
-            (point.0, point.1, point.2 + 1),
-            points_set,
-            &mut outside,
-            &mut inside,
-        ) {
-            result += 1;
-        }
-        if reaches_outside(
-            (point.0, point.1, point.2 - 1),
-            points_set,
-            &mut outside,
-            &mut inside,
-        ) {
-            result += 1;
-        }
+        generate_neighbors(point.0, point.1, point.2)
+            .iter()
+            .for_each(|&p| {
+                if reaches_outside(p, points_set, &mut outside, &mut inside) {
+                    result += 1;
+                }
+            })
     }
     result
 }
