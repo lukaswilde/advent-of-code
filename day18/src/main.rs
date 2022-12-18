@@ -67,6 +67,7 @@ fn get_total_free_sides(
         .sum()
 }
 
+// Approach for Part 2 inspired by https://github.com/jonathanpaulson/AdventOfCode/blob/master/2022/18.py
 fn reaches_outside(
     point: (isize, isize, isize),
     point_set: &HashSet<(isize, isize, isize)>,
