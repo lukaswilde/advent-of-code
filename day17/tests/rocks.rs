@@ -8,8 +8,10 @@ fn simple() -> Result<(), Box<dyn std::error::Error>> {
     cmd.arg(">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>");
     cmd.assert()
         .success()
-        .stdout(predicate::str::contains("The maximum height is 3068"));
-    // .stdout(predicate::str::contains("The maximum height is 1514285714288"));
+        .stdout(predicate::str::contains("The maximum height is 3068"))
+        .stdout(predicate::str::contains(
+            "The maximum height for the ridiculous amount of rounds is 1514285714288",
+        ));
     Ok(())
 }
 
@@ -19,7 +21,9 @@ fn complex() -> Result<(), Box<dyn std::error::Error>> {
     cmd.args(["-i", "../day17/puzzle.txt"]);
     cmd.assert()
         .success()
-        .stdout(predicate::str::contains("The maximum height is 3166"));
-    // .stdout(predicate::str::contains("The maximum height is 3166"));
+        .stdout(predicate::str::contains("The maximum height is 3166"))
+        .stdout(predicate::str::contains(
+            "The maximum height for the ridiculous amount of rounds is 1577207977186",
+        ));
     Ok(())
 }
