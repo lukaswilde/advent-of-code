@@ -59,7 +59,7 @@ fn find_human_res(lookup_table: &HashMap<String, Monkey>, root_monkey: &Monkey) 
     for i in [-1.0, 1.0] {
         let mut low = 0;
         let mut high = i64::MAX / 2;
-        while low + 1 < high {
+        while low < high {
             let mid = (low + high) / 2;
             let human = Monkey {
                 result: Some(mid as f64),
@@ -69,9 +69,9 @@ fn find_human_res(lookup_table: &HashMap<String, Monkey>, root_monkey: &Monkey) 
             let result = variable.evaluate(&base_lookup);
 
             if result * i < to_reach * i {
-                high = mid;
+                high = mid - 1;
             } else if result * i > to_reach * i {
-                low = mid;
+                low = mid + 1;
             } else {
                 assert!(new_root.evaluate(&base_lookup) == 1.0);
                 return mid;
