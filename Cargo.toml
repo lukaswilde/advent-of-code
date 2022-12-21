@@ -4,3 +4,6 @@ members = [
     "day*",
     "utils",
 ]
+
+[profile.test]
+opt-level = 3
