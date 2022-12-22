@@ -33,6 +33,9 @@ fn complex() -> Result<(), Box<dyn std::error::Error>> {
     cmd.args(["-i", "../day22/puzzle.txt"]);
     cmd.assert()
         .success()
-        .stdout(predicate::str::contains("The final password is 165094"));
+        .stdout(predicate::str::contains("The final password is 165094"))
+        .stdout(predicate::str::contains(
+            "The final password when seen as cube is 95316",
+        ));
     Ok(())
 }
