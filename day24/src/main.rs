@@ -275,6 +275,7 @@ impl FromStr for Map {
 
 // Functions for easier debugging, by drawing the current map state during search
 impl Map {
+    #[allow(dead_code)]
     fn clear(&mut self) {
         for h in 1..self.height - 1 {
             for w in 1..self.width - 1 {
@@ -285,10 +286,12 @@ impl Map {
         self.grid[self.end.1][self.end.1] = '.';
     }
 
+    #[allow(dead_code)]
     fn set_point(&mut self, x: usize, y: usize) {
         self.grid[x][y] = 'E';
     }
 
+    #[allow(dead_code)]
     fn set_blizzards(&mut self, blizzards: &[Blizzard]) {
         println!(
             "Width of grid: {}, height of grid: {}",
