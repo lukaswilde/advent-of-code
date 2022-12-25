@@ -9,12 +9,11 @@ fn main() {
 
     println!("The resulting map is\n{}", map);
     let first_way = astar(&mut map);
-    let second_way = astar(&mut map);
-    let third_way = astar(&mut map);
+    let rest = astar(&mut map) + astar(&mut map);
     println!("The shortest path takes {} minutes", first_way);
     println!(
         "Going back and reaching the goal again takes {} minutes",
-        first_way + second_way + third_way
+        first_way + rest
     );
 }
 
