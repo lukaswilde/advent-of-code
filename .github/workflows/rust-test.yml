@@ -10,162 +10,225 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  day1:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: cargo build --verbose
-
-  day1:
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
+      run: cargo build --verbose --bin day01
     - name: Run tests
       run: cargo test -p day01 --verbose
   day2:
     runs-on: ubuntu-latest
-    needs: [build]
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day02
     - name: Run tests
       run: cargo test -p day02 --verbose
   day3:
     runs-on: ubuntu-latest
-    needs: [build]
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day03
     - name: Run tests
       run: cargo test -p day03 --verbose
   day4:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day04
     - name: Run tests
       run: cargo test -p day04 --verbose
   day5:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day05
     - name: Run tests
       run: cargo test -p day05 --verbose
   day6:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day06
     - name: Run tests
       run: cargo test -p day06 --verbose
   day7:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day07
     - name: Run tests
       run: cargo test -p day07 --verbose
   day8:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day08
     - name: Run tests
       run: cargo test -p day08 --verbose
   day9:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day09
     - name: Run tests
       run: cargo test -p day09 --verbose
   day10:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day10
     - name: Run tests
       run: cargo test -p day10 --verbose
   day11:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day11
     - name: Run tests
       run: cargo test -p day11 --verbose
   day12:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day12
     - name: Run tests
       run: cargo test -p day12 --verbose
   day13:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day13
     - name: Run tests
       run: cargo test -p day13 --verbose
   day14:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day14
     - name: Run tests
       run: cargo test -p day14 --verbose
   day15:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day15
     - name: Run tests
       run: cargo test -p day15 --verbose
   day16:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day16
     - name: Run tests
       run: cargo test -p day16 --verbose
   day17:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day17
     - name: Run tests
       run: cargo test -p day17 --verbose
   day18:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day18
     - name: Run tests
       run: cargo test -p day18 --verbose
   day19:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day19
     - name: Run tests
       run: cargo test -p day19 --verbose
   day20:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day20
     - name: Run tests
       run: cargo test -p day20 --verbose
   day21:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day21
     - name: Run tests
       run: cargo test -p day21 --verbose
   day22:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day22
     - name: Run tests
       run: cargo test -p day22 --verbose
   day23:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day23
     - name: Run tests
       run: cargo test -p day23 --verbose
   day24:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day24
     - name: Run tests
       run: cargo test -p day24 --verbose
   day25:
     runs-on: ubuntu-latest
-    needs: [build]
+    
     steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose --bin day25
     - name: Run tests
       run: cargo test -p day25 --verbose
