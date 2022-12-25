@@ -21,7 +21,7 @@ fn snafu2decimal(snafu: &str) -> isize {
             let coefficient = match cur {
                 '=' => -2,
                 '-' => -1,
-                x => x.to_digit(10).expect("Should be 1,2 or 3") as isize,
+                x => x.to_digit(10).expect("Should be 0, 1 or 2") as isize,
             };
             (res + coefficient * 5isize.pow(power), power + 1)
         })
