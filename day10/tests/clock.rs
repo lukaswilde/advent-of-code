@@ -18,7 +18,7 @@ addx -5",
 }
 
 #[test]
-fn signal_strength() -> Result<(), Box<dyn std::error::Error>> {
+fn simple() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("day10")?;
     cmd.arg(
         "addx 15
@@ -178,6 +178,25 @@ noop",
 #####.....#####.....#####.....#####.....
 ######......######......######......####
 #######.......#######.......#######.....",
+        ));
+
+    Ok(())
+}
+
+#[test]
+fn complex() -> Result<(), Box<dyn std::error::Error>> {
+    let mut cmd = Command::cargo_bin("day10")?;
+    cmd.args(["-i", "../day10/puzzle.txt"]);
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains("The signal strength is 14060"))
+        .stdout(predicate::str::contains(
+            "###...##..###..#..#.####.#..#.####...##.
+#..#.#..#.#..#.#.#..#....#.#..#.......#.
+#..#.#..#.#..#.##...###..##...###.....#.
+###..####.###..#.#..#....#.#..#.......#.
+#....#..#.#....#.#..#....#.#..#....#..#.
+#....#..#.#....#..#.#....#..#.####..##..",
         ));
 
     Ok(())

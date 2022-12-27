@@ -3,7 +3,7 @@ use predicates::prelude::*;
 use std::process::Command;
 
 #[test]
-fn monkey_business() -> Result<(), Box<dyn std::error::Error>> {
+fn simple() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("day11")?;
     cmd.arg(
         "Monkey 0:
@@ -41,6 +41,22 @@ Monkey 3:
         ))
         .stdout(predicate::str::contains(
             "The monkey business after 10000 rounds is 2713310158",
+        ));
+
+    Ok(())
+}
+
+#[test]
+fn complex() -> Result<(), Box<dyn std::error::Error>> {
+    let mut cmd = Command::cargo_bin("day11")?;
+    cmd.args(["-i", "../day11/puzzle.txt"]);
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "The monkey business after 20 rounds is 112815",
+        ))
+        .stdout(predicate::str::contains(
+            "The monkey business after 10000 rounds is 25738411485",
         ));
 
     Ok(())

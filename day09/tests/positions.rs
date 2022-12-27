@@ -3,7 +3,7 @@ use predicates::prelude::*;
 use std::process::Command;
 
 #[test]
-fn positions_simple() -> Result<(), Box<dyn std::error::Error>> {
+fn simple() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("day09")?;
     cmd.arg(
         "R 4
@@ -28,7 +28,7 @@ R 2",
 }
 
 #[test]
-fn positions_medium() -> Result<(), Box<dyn std::error::Error>> {
+fn medium() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("day09")?;
     cmd.arg(
         "R 5
@@ -47,6 +47,22 @@ U 20",
         ))
         .stdout(predicate::str::contains(
             "The number of visited positions with 10 knots is 36",
+        ));
+
+    Ok(())
+}
+
+#[test]
+fn complex() -> Result<(), Box<dyn std::error::Error>> {
+    let mut cmd = Command::cargo_bin("day09")?;
+    cmd.args(["-i", "../day09/puzzle.txt"]);
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "The number of visited positions with 2 knots is 5619",
+        ))
+        .stdout(predicate::str::contains(
+            "The number of visited positions with 10 knots is 2376",
         ));
 
     Ok(())

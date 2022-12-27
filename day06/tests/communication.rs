@@ -77,3 +77,18 @@ fn fifth() -> Result<(), Box<dyn std::error::Error>> {
         ));
     Ok(())
 }
+
+#[test]
+fn complex() -> Result<(), Box<dyn std::error::Error>> {
+    let mut cmd = Command::cargo_bin("day06")?;
+    cmd.args(["-i", "../day06/puzzle.txt"]);
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "The first position after a packet marker is 1896",
+        ))
+        .stdout(predicate::str::contains(
+            "The first position after a message marker is 3452",
+        ));
+    Ok(())
+}

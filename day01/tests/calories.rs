@@ -3,7 +3,7 @@ use predicates::prelude::*;
 use std::process::Command;
 
 #[test]
-fn example() -> Result<(), Box<dyn std::error::Error>> {
+fn simple() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("day01")?;
     cmd.arg(
         "1000
@@ -28,6 +28,22 @@ fn example() -> Result<(), Box<dyn std::error::Error>> {
         ))
         .stdout(predicate::str::contains(
             "Calories by top three elves are: 45000",
+        ));
+
+    Ok(())
+}
+
+#[test]
+fn complex() -> Result<(), Box<dyn std::error::Error>> {
+    let mut cmd = Command::cargo_bin("day01")?;
+    cmd.args(["-i", "../day01/puzzle.txt"]);
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "Most calories that an elve is carrying: 67633",
+        ))
+        .stdout(predicate::str::contains(
+            "Calories by top three elves are: 199628",
         ));
 
     Ok(())

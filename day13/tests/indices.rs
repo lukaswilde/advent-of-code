@@ -40,3 +40,18 @@ fn simple() -> Result<(), Box<dyn std::error::Error>> {
         ));
     Ok(())
 }
+
+#[test]
+fn complex() -> Result<(), Box<dyn std::error::Error>> {
+    let mut cmd = Command::cargo_bin("day13")?;
+    cmd.args(["-i", "../day13/puzzle.txt"]);
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "The sum of the indices of ordered pairs is 6046",
+        ))
+        .stdout(predicate::str::contains(
+            "The product of the decoder indices is 21423",
+        ));
+    Ok(())
+}

@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use utils::parse_text;
 
 fn main() {
@@ -38,9 +40,9 @@ fn execute_turn(monkeys: &mut Vec<Monkey>, worry_decrease: bool) {
         let monkey = &mut monkeys[i];
         let mut new_locs: Vec<(usize, usize)> = vec![];
 
-        for _ in 0..monkey.items.len() {
+        while !monkey.items.is_empty() {
             let mut new_val =
-                (monkey.op)(monkey.items.pop().expect("Should be able to remove this"));
+                (monkey.op)(monkey.items.pop_front().expect("Should be able to remove"));
             if worry_decrease {
                 new_val /= 3;
             }
@@ -48,8 +50,8 @@ fn execute_turn(monkeys: &mut Vec<Monkey>, worry_decrease: bool) {
             new_locs.push((to_monkey, new_val));
             monkey.num_inspections += 1;
         }
-        for (to, val) in new_locs.iter().rev() {
-            monkeys[*to].items.push(*val);
+        for (to, val) in new_locs {
+            monkeys[to].items.push_back(val);
         }
     }
 }
@@ -65,7 +67,7 @@ fn get_monkey_business(mut monkeys: Vec<Monkey>) -> usize {
 }
 
 struct Monkey {
-    items: Vec<usize>,
+    items: VecDeque<usize>,
     op: Box<dyn Fn(usize) -> usize>,
     test: Box<dyn Fn(usize) -> usize>,
     num_inspections: usize,
@@ -81,7 +83,7 @@ impl Monkey {
             .split_whitespace()
             .skip(2)
             .map(|x| x.parse::<usize>().expect("Should be integers"))
-            .collect::<Vec<_>>();
+            .collect::<VecDeque<_>>();
 
         let test_lines: Vec<usize> = s
             .lines()
@@ -116,24 +118,24 @@ impl Monkey {
         // need to choose t as the product of all numbers in the test cases
         match (op_args[0], op_args[1]) {
             ("+", "old") => Monkey {
-                op: Box::new(move |x| (x % divis_prod + x)),
+                op: Box::new(move |x| ((x % divis_prod) + x) % divis_prod),
                 ..template_monkey
             },
             ("*", "old") => Monkey {
-                op: Box::new(move |x| (x % divis_prod * x)),
+                op: Box::new(move |x| ((x % divis_prod) * x) % divis_prod),
                 ..template_monkey
             },
             ("+", val) => {
                 let val = val.parse::<usize>().unwrap();
                 Monkey {
-                    op: Box::new(move |x| (x % divis_prod + val)),
+                    op: Box::new(move |x| ((x % divis_prod) + val) % divis_prod),
                     ..template_monkey
                 }
             }
             ("*", val) => {
                 let val = val.parse::<usize>().unwrap();
                 Monkey {
-                    op: Box::new(move |x| (x % divis_prod * val)),
+                    op: Box::new(move |x| ((x % divis_prod) * val) % divis_prod),
                     ..template_monkey
                 }
             }

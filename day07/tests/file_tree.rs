@@ -3,7 +3,7 @@ use predicates::prelude::*;
 use std::process::Command;
 
 #[test]
-fn sums() -> Result<(), Box<dyn std::error::Error>> {
+fn simple() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("day07")?;
     cmd.arg(
         "$ cd /
@@ -34,6 +34,20 @@ fn sums() -> Result<(), Box<dyn std::error::Error>> {
         .success()
         .stdout(predicate::str::contains("The sum of directories is 95437"))
         .stdout(predicate::str::contains("The smallest delete is 24933642"));
+
+    Ok(())
+}
+
+#[test]
+fn complex() -> Result<(), Box<dyn std::error::Error>> {
+    let mut cmd = Command::cargo_bin("day07")?;
+    cmd.args(["-i", "../day07/puzzle.txt"]);
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "The sum of directories is 1325919",
+        ))
+        .stdout(predicate::str::contains("The smallest delete is 2050735"));
 
     Ok(())
 }
