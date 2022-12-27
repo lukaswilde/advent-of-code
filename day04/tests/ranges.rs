@@ -3,7 +3,7 @@ use predicates::prelude::*;
 use std::process::Command;
 
 #[test]
-fn sum_priorities() -> Result<(), Box<dyn std::error::Error>> {
+fn simple() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("day04")?;
     cmd.arg(
         "2-4,6-8
@@ -20,6 +20,22 @@ fn sum_priorities() -> Result<(), Box<dyn std::error::Error>> {
         ))
         .stdout(predicate::str::contains(
             "The number of overlapping ranges is 4",
+        ));
+
+    Ok(())
+}
+
+#[test]
+fn complex() -> Result<(), Box<dyn std::error::Error>> {
+    let mut cmd = Command::cargo_bin("day04")?;
+    cmd.args(["-i", "../day04/puzzle.txt"]);
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "The number of completely overlapping ranges is 444",
+        ))
+        .stdout(predicate::str::contains(
+            "The number of overlapping ranges is 801",
         ));
 
     Ok(())
